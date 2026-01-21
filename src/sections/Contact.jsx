@@ -3,6 +3,8 @@ import Alert from "../components/Alert";
 import { Particles } from "../components/Particles";
 import { useScrollReveal } from "../hooks/useScrollReveal";
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
 const Contact = () => {
   const [formData, setFormData] = useState({
     name: "",
@@ -10,19 +12,18 @@ const Contact = () => {
     message: "",
   });
 
-  const [isLoading, setisLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [showAlert, setShowAlert] = useState(false);
   const [alertType, setAlertType] = useState("success");
-  const [alertMessage, setAlertMessage] = useState("Empty");
+  const [alertMessage, setAlertMessage] = useState("");
 
   const [sectionRef, isVisible] = useScrollReveal({
     threshold: 0.1,
     once: true,
   });
 
-  const handleChange = (e) => {
+  const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
 
   const showAlertMessage = (type, message) => {
     setAlertType(type);
@@ -31,38 +32,27 @@ const Contact = () => {
     setTimeout(() => setShowAlert(false), 5000);
   };
 
-  // 🔁 ONLY REAL CHANGE IS HERE
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setisLoading(true);
+    setIsLoading(true);
 
     try {
-      const response = await fetch("http://localhost:5137/api/Contact", {
+      const response = await fetch(`${API_BASE}/api/Contact`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          accept: "*/*",
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          message: formData.message,
-        }),
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
       });
 
       const result = await response.json();
-
-      if (!response.ok) {
-        throw new Error("API error");
-      }
+      if (!response.ok) throw new Error(result.message);
 
       setFormData({ name: "", email: "", message: "" });
-      showAlertMessage("success", result.message || "Message sent!");
-    } catch (error) {
-      console.error(error);
-      showAlertMessage("danger", "Something went wrong!");
+      showAlertMessage("success", "Message sent successfully!");
+    } catch (err) {
+      console.error(err);
+      showAlertMessage("danger", "Failed to send message.");
     } finally {
-      setisLoading(false);
+      setIsLoading(false);
     }
   };
 
@@ -75,7 +65,7 @@ const Contact = () => {
         className="absolute inset-0 z-50"
         quantity={100}
         ease={80}
-        color={"#ffffff"}
+        color="#fff"
         refresh
       />
 
@@ -83,31 +73,26 @@ const Contact = () => {
 
       <div
         ref={sectionRef}
-        className={`flex flex-col items-center justify-center max-w-md p-5 mx-auto border border-white/10 rounded-2xl bg-primary scroll-reveal ${
+        className={`flex flex-col items-center justify-center max-w-md p-5 mx-auto
+        border border-white/10 rounded-2xl bg-primary scroll-reveal ${
           isVisible ? "visible" : ""
         }`}
       >
         <div className="flex flex-col items-start w-full gap-5 mb-10">
-          <h2 className="text-heading"> Lets Talk </h2>
-          <p className="font-normal text-neutral-400">
+          <h2 className="text-heading">Let’s Talk</h2>
+          <p className="text-neutral-400">
             Whether it’s a new feature, a full-scale platform, or a system that
-            needs stability and performance
-            <br /> I help ship software that lasts.
+            needs stability and performance — I help ship software that lasts.
           </p>
         </div>
 
         <form className="w-full" onSubmit={handleSubmit}>
           <div className="mb-5">
-            <label htmlFor="name" className="field-label">
-              Full Name
-            </label>
+            <label className="field-label">Full Name</label>
             <input
-              id="name"
               name="name"
-              type="text"
               className="field-input field-input-focus"
               placeholder="Your good name"
-              autoComplete="name"
               value={formData.name}
               onChange={handleChange}
               required
@@ -115,16 +100,12 @@ const Contact = () => {
           </div>
 
           <div className="mb-5">
-            <label htmlFor="email" className="field-label">
-              Email
-            </label>
+            <label className="field-label">Email</label>
             <input
-              id="email"
               name="email"
               type="email"
               className="field-input field-input-focus"
-              placeholder="Violet@gmail.com"
-              autoComplete="email"
+              placeholder="you@example.com"
               value={formData.email}
               onChange={handleChange}
               required
@@ -132,11 +113,8 @@ const Contact = () => {
           </div>
 
           <div className="mb-5">
-            <label htmlFor="message" className="field-label">
-              Message
-            </label>
+            <label className="field-label">Message</label>
             <textarea
-              id="message"
               name="message"
               rows={4}
               className="field-input field-input-focus"
@@ -149,9 +127,9 @@ const Contact = () => {
 
           <button
             type="submit"
-            className="w-full px-1 py-3 text-center rounded-md cursor-pointer bg-radial from-lavender hover-animation"
+            className="w-full py-3 rounded-md bg-radial from-lavender hover-animation"
           >
-            {!isLoading ? "send" : "Sending..."}
+            {isLoading ? "Sending..." : "Send"}
           </button>
         </form>
       </div>

@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { Timeline } from "../components/Timeline";
 import { useScrollReveal } from "../hooks/useScrollReveal";
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL;
+
 const Experience = () => {
   const [sectionRef, isVisible] = useScrollReveal({
     threshold: 0.1,
@@ -12,8 +14,11 @@ const Experience = () => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch("http://localhost:5137/api/Experience")
-      .then((res) => res.json())
+    fetch(`${API_BASE}/api/Experience`)
+      .then((res) => {
+        if (!res.ok) throw new Error("API error");
+        return res.json();
+      })
       .then((data) => {
         setExperiences(data);
         setLoading(false);
