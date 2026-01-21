@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:5137/api";
+const API_BASE = `${import.meta.env.VITE_API_BASE_URL}/api`;
 
 export async function getCertifications() {
   const response = await fetch(`${API_BASE}/Certifications`);
