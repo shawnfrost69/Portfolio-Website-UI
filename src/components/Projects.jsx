@@ -1,61 +1,34 @@
-import React, { useState } from "react";
-import ProjectDetails from "./ProjectDetails";
-import { useScrollReveal } from "../hooks/useScrollReveal";
-
-const Projects = ({
-  title,
-  description,
-  subDescription,
-  href,
-  image,
-  tags,
-  setPreview,
-  index,
-}) => {
-  const [isHidden, setIsHidden] = useState(false);
-  const [projectRef, isVisible] = useScrollReveal({ threshold: 0.2, once: true });
+const Projects = ({ id, title, description, stack, setSelectedProjectId }) => {
+  const techStack =
+    typeof stack === "string" ? stack.split(",").map((s) => s.trim()) : [];
 
   return (
-    <>
-      <div
-        ref={projectRef}
-        className={`flex-wrap items-center justify-between py-10 space-y-14 sm:flex sm:space-y-0 scroll-reveal ${isVisible ? 'visible' : ''}`}
-        style={{ transitionDelay: `${index * 0.1}s` }}
-        onMouseEnter={() => setPreview(image)}
-        onMouseLeave={() => setPreview(null)}
-      >
-        <div>
-          <p className="text-2xl">{title}</p>
-          <div className="flex gap-5 mt-2 text-sand">
-            {tags.map((tag) => (
-              <span key={tag.id}>{tag.name}</span>
+    <div className="group grid grid-cols-[1fr_auto] items-center py-10 border-b border-white/10">
+      <div>
+        <h3 className="text-xl font-semibold">{title}</h3>
+
+        {description && (
+          <p className="mt-2 text-sm text-neutral-400 max-w-xl">
+            {description}
+          </p>
+        )}
+
+        {techStack.length > 0 && (
+          <div className="mt-3 flex gap-4 text-sm text-amber-400">
+            {techStack.map((t) => (
+              <span key={t}>{t}</span>
             ))}
           </div>
-        </div>
-        <button
-          onClick={() => setIsHidden(true)}
-          className="flex items-center gap-1 cursor-pointer hover-animation"
-        >
-          Read More
-          <img src="assets/arrow-right.svg" className="w-5" />
-        </button>
+        )}
       </div>
-      <div
-        className="bg-gradient-to-r from-transparent
-       via-neutral-700 to-transparent h-[1px] w-full"
-      />
-      {isHidden && (
-        <ProjectDetails
-          title={title}
-          description={description}
-          subDescription={subDescription}
-          image={image}
-          tags={tags}
-          href={href}
-          closeModal={() => setIsHidden(false)}
-        />
-      )}
-    </>
+
+      <button
+        onClick={() => setSelectedProjectId(id)}
+        className="flex items-center gap-2 text-sm text-white/80 hover:text-white transition"
+      >
+        Read More <span>→</span>
+      </button>
+    </div>
   );
 };
 

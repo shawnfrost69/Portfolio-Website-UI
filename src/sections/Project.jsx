@@ -1,54 +1,97 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Projects from "../components/Projects";
-import { myProjects } from "../constants";
-import { motion, useMotionValue, useSpring } from "motion/react";
+import ProjectModal from "../components/ProjectDetails";
 import { useScrollReveal } from "../hooks/useScrollReveal";
 
-const Project = () => {
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-  const springX = useSpring(x, { damping: 10, stiffness: 50 });
-  const springY = useSpring(y, { damping: 10, stiffness: 50 });
-  const handleMouseMove = (event) => {
-    x.set(event.clientX + 20);
-    y.set(event.clientY + 20);
-  };
+const VISIBLE_COUNT = 3;
 
-  const [preview, setPreview] = useState(null);
+const Project = () => {
+  const [projects, setProjects] = useState([]);
+
+  // 🔥 ONE SOURCE OF TRUTH
+  const [selectedProjectId, setSelectedProjectId] = useState(null);
+  const [selectedProject, setSelectedProject] = useState(null);
+
+  // 👇 show more toggle
+  const [showAll, setShowAll] = useState(false);
+
   const [sectionRef, isVisible] = useScrollReveal({
     threshold: 0.1,
     once: true,
   });
 
+  // 🔹 LIST
+  useEffect(() => {
+    fetch("http://localhost:5137/api/Projects")
+      .then((res) => res.json())
+      .then(setProjects);
+  }, []);
+
+  // 🔹 DETAILS (READ MORE)
+  useEffect(() => {
+    if (!selectedProjectId) return;
+
+    fetch(`http://localhost:5137/api/Projects/${selectedProjectId}`)
+      .then((res) => res.json())
+      .then(setSelectedProject);
+  }, [selectedProjectId]);
+
+  // 🔹 CLOSE HANDLER
+  const closeModal = () => {
+    setSelectedProject(null);
+    setSelectedProjectId(null);
+  };
+
+  // 👇 slice logic
+  const visibleProjects = showAll ? projects : projects.slice(0, VISIBLE_COUNT);
+
   return (
-    <section
-      onClick={handleMouseMove}
-      className="relative c-space section-spacing"
-      id="projects"
-    >
-      <h2 className="text-heading">My Selected Projects</h2>
+    <section id="projects" className="relative c-space section-spacing">
+      <h2 className="text-heading">My Projects</h2>
+
       <div
         ref={sectionRef}
-        className={`bg-gradient-to-r from-transparent via-neutral-700 to-transparent mt-12 h-[1px] w-full scroll-reveal-fade ${
+        className={`mt-12 h-[1px] w-full bg-gradient-to-r from-transparent via-neutral-700 to-transparent ${
           isVisible ? "visible" : ""
         }`}
       />
-      {myProjects.map((project, index) => (
+
+      {/* 🔥 PROJECT LIST */}
+      {visibleProjects.map((p) => (
         <Projects
-          key={project.id}
-          {...project}
-          setPreview={setPreview}
-          index={index}
+          key={p.id}
+          {...p}
+          setSelectedProjectId={setSelectedProjectId}
         />
       ))}
-      {preview && (
-        <motion.img
-          className="fixed top-0 left-0 z-50 object-cover 
-      h-56 rounded-lg shadow-lg 
-      pointer-events-auto w-80"
-          src={preview}
-          style={{ x: springX, y: springY }}
-        />
+
+      {/* 🔽 CHECK MORE BUTTON */}
+      {projects.length > VISIBLE_COUNT && (
+        <div className="mt-10 flex justify-center">
+          <button
+            onClick={() => setShowAll((prev) => !prev)}
+            className="group inline-flex items-center gap-2
+            px-6 py-2 rounded-full
+            border border-white/15
+            text-sm text-white/80
+            hover:text-white hover:border-white/30
+            transition"
+          >
+            {showAll ? "Show Less" : "Check More"}
+            <img
+              src="/assets/arrow-up.svg"
+              className={`w-4 h-4 transition-transform ${
+                showAll ? "rotate-180" : ""
+              }`}
+              alt="toggle"
+            />
+          </button>
+        </div>
+      )}
+
+      {/* 🔥 MODAL */}
+      {selectedProject && (
+        <ProjectModal project={selectedProject} closeModal={closeModal} />
       )}
     </section>
   );

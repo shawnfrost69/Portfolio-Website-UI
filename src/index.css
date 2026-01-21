@@ -48,6 +48,18 @@
   }
 }
 @layer base {
+  html {
+    font-size: 15px;
+  }
+}
+
+@layer base {
+  section {
+    scroll-margin-top: 80px;
+  }
+}
+
+@layer base {
   body {
     background: #030412;
     font-family: "Funnel Display", sans-serif;
@@ -62,8 +74,9 @@
   .scroll-reveal {
     opacity: 0;
     transform: translateY(50px);
-    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
-                transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    transition:
+      opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .scroll-reveal.visible {
@@ -83,8 +96,9 @@
   .scroll-reveal-left {
     opacity: 0;
     transform: translateX(-50px);
-    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
-                transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    transition:
+      opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .scroll-reveal-left.visible {
@@ -95,8 +109,9 @@
   .scroll-reveal-right {
     opacity: 0;
     transform: translateX(50px);
-    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
-                transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    transition:
+      opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .scroll-reveal-right.visible {
@@ -107,8 +122,9 @@
   .scroll-reveal-scale {
     opacity: 0;
     transform: scale(0.9);
-    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
-                transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    transition:
+      opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1),
+      transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .scroll-reveal-scale.visible {
@@ -125,7 +141,7 @@
   }
 
   .section-spacing {
-    @apply min-h-screen mt-20 md:mt-30;
+    @apply mt-20 md:mt-30;
   }
 
   .text-heading {
@@ -144,13 +160,11 @@
   .nav-ul {
     @apply flex flex-col items-center gap-4 sm:flex-row md:gap-6 relative z-20;
   }
-
   .nav-li {
     @apply text-neutral-400 hover:text-white max-sm:w-full max-sm:rounded-md py-2 max-sm:px-5;
   }
-
   .nav-link {
-    @apply text-lg md:text-base hover:text-white transition-colors;
+    @apply text-lg md:text-base hover:text-aqua transition-colors;
   }
 
   /* Button Components */
