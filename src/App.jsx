@@ -10,16 +10,21 @@ import Certifications from "./sections/Certifications";
 
 const App = () => {
   return (
-    <div className="container mx-auto max-w-7xl">
+    <>
+      {/* ✅ Full-width sections */}
       <Navbar />
       <Hero />
-      <About />
-      <Projects />
-      <Experience />
-      <Certifications />
-      <Contact />
-      <Footer />
-    </div>
+
+      {/* ✅ Boxed content */}
+      <div className="mx-auto max-w-7xl">
+        <About />
+        <Projects />
+        <Experience />
+        <Certifications />
+        <Contact />
+        <Footer />
+      </div>
+    </>
   );
 };
 
