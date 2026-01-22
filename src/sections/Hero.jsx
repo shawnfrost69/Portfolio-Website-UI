@@ -23,14 +23,10 @@ const Hero = () => {
       {/* 🌌 Parallax Background */}
       <ParrallaxBackground />
 
-      {/* ✨ Hero Text */}
       <HeroText />
 
       {/* 🧑‍🚀 Astronaut Canvas */}
-      <figure
-        className="absolute inset-0 z-0"
-        style={{ width: "100vw", height: "100vh" }}
-      >
+      <figure className="absolute inset-0 z-0 pointer-events-none">
         <Canvas camera={{ position: [0, 1, 3] }}>
           <Suspense fallback={<Loader />}>
             <Float>
