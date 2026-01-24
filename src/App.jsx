@@ -15,15 +15,13 @@ const App = () => {
       <Navbar />
       <Hero />
 
-      {/* ✅ Boxed content */}
-      <div className="mx-auto max-w-7xl">
-        <About />
-        <Projects />
-        <Experience />
-        <Certifications />
-        <Contact />
-        <Footer />
-      </div>
+      <About />
+      <Projects />
+      <Experience />
+      <Certifications />
+      <Contact />
+      <Footer />
+
     </>
   );
 };
